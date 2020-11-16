@@ -9,6 +9,6 @@ YTIssues >> items [
 	^ data collect: [ :each |
 		| resource |
 		resource := YTIssue fromData: each.
-		resource query: (self youtrack issue: resource issueId).
+		resource query: (self youtrack issue: resource id).
 		resource ]
 ]

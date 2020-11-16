@@ -12,5 +12,6 @@ YTObjectResource class >> fromData: anObject [
 
 { #category : #accessing }
 YTObjectResource class >> type [
-	^ self subclassResponsibility
+	self assert: (self name beginsWith: 'YT').
+	^ self name allButFirst: 2
 ]

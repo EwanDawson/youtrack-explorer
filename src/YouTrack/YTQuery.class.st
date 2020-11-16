@@ -5,7 +5,9 @@ Class {
 		'path',
 		'resourceClass',
 		'youtrack',
-		'queryParams'
+		'queryParams',
+		'mandatoryFields',
+		'fields'
 	],
 	#category : #'YouTrack-Client'
 }
@@ -15,7 +17,7 @@ YTQuery class >> deeplyNestedFieldQuery [
 	<gtExample>
 	| query |
 	query := self new fields: {'name'. {'child'. { {'grandchild'. {'name'. 'status'} } } }. 'id'}.
-	self assert: query fields = 'name,child(grandchild(name,status)),id'.
+	self assert: query fieldsString = 'name,child(grandchild(name,status)),id'.
 	^ query
 ]
 
@@ -64,11 +66,29 @@ YTQuery class >> for: youtrack path: aString resource: aYTResourceClass [
 ]
 
 { #category : #example }
+YTQuery class >> mandatoryFields [
+	<gtExample>
+	| query |
+	query := self new mandatoryFields: { 'id' }; fields: { 'name' }; yourself.
+	self assert: query fieldsString = 'name,id'.
+	^ query
+]
+
+{ #category : #example }
+YTQuery class >> mandatoryFields2 [
+	<gtExample>
+	| query |
+	query := self new fields: { 'name' }; mandatoryFields: { 'id' }; yourself.
+	self assert: query fieldsString = 'name,id'.
+	^ query
+]
+
+{ #category : #example }
 YTQuery class >> mutlipleFieldQuery [
 	<gtExample>
 	| query |
 	query := self new fields: { 'name'. 'status'. 'id'}.
-	self assert: query fields = 'name,status,id'.
+	self assert: query fieldsString = 'name,status,id'.
 	^ query
 ]
 
@@ -77,7 +97,7 @@ YTQuery class >> nestedFieldQuery [
 	<gtExample>
 	| query |
 	query := self new fields: { 'name'. {'child'. {'name'. 'status'} }. 'id'}.
-	self assert: query fields = 'name,child(name,status),id'.
+	self assert: query fieldsString = 'name,child(name,status),id'.
 	^ query
 ]
 
@@ -86,7 +106,7 @@ YTQuery class >> noFieldsQuery [
 	<gtExample>
 	| query |
 	query := self new fields: Array empty.
-	self assert: query fields = nil.
+	self assert: query fieldsString = nil.
 	^ query
 ]
 
@@ -95,17 +115,13 @@ YTQuery class >> singleFieldQuery [
 	<gtExample>
 	| query |
 	query := self new fields: { 'name' }.
-	self assert: query fields = 'name'.
+	self assert: query fieldsString = 'name'.
 	^ query
 ]
 
-{ #category : #example }
-YTQuery class >> stringFieldQuery [
-	<gtExample>
-	| query |
-	query := self new fields: 'name,child(grandchild(name,status)),id'.
-	self assert: query fields = 'name,child(grandchild(name,status)),id'.
-	^ query
+{ #category : #private }
+YTQuery >> addMandatoryFields [
+	mandatoryFields do: [ :each | (fields includes: each) ifFalse: [ fields add: each ] ]
 ]
 
 { #category : #operation }
@@ -118,20 +134,33 @@ YTQuery >> execute [
 
 { #category : #accessing }
 YTQuery >> fields [
-	^ queryParams at: 'fields' ifAbsent: nil
+	^ OrderedCollection newFrom: fields
 ]
 
 { #category : #accessing }
-YTQuery >> fields: anObject [
-	anObject isNotEmpty ifTrue: [
-		anObject isArray
-			ifTrue: [ queryParams at: 'fields' put: (self class fieldsQuery: anObject) ]
-			ifFalse: [ queryParams at: 'fields' put: anObject ]]
+YTQuery >> fields: aCollection [
+	fields := OrderedCollection newFrom: aCollection.
+	self addMandatoryFields.
+	self updateFieldsQueryParam
+]
+
+{ #category : #accessing }
+YTQuery >> fieldsString [
+	^ queryParams at: 'fields' ifAbsent: nil
 ]
 
 { #category : #initalize }
 YTQuery >> initialize [
-	queryParams := Dictionary new
+	queryParams := Dictionary new.
+	fields := OrderedCollection new.
+	mandatoryFields := OrderedCollection new.
+]
+
+{ #category : #accessing }
+YTQuery >> mandatoryFields: aCollection [
+	mandatoryFields := OrderedCollection newFrom: aCollection.
+	self addMandatoryFields.
+	self updateFieldsQueryParam
 ]
 
 { #category : #accessing }
@@ -164,6 +193,12 @@ YTQuery >> skip: anInteger [
 YTQuery >> top: anInteger [
 	self assert: anInteger > 0.
 	queryParams at: '$top' put: anInteger.
+]
+
+{ #category : #private }
+YTQuery >> updateFieldsQueryParam [
+	fields isNotEmpty ifTrue: [
+	queryParams at: 'fields' put: (self class fieldsQuery: fields) ]
 ]
 
 { #category : #accessing }

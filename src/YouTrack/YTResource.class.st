@@ -23,6 +23,11 @@ YTResource class >> fromQuery: aQuery [
 		yourself
 ]
 
+{ #category : #accessing }
+YTResource >> data [
+	^ data
+]
+
 { #category : #private }
 YTResource >> data: anObject [ 
 	data := anObject

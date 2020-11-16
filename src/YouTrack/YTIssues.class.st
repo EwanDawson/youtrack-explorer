@@ -1,14 +1,14 @@
 Class {
 	#name : #YTIssues,
-	#superclass : #YTResource,
+	#superclass : #YTArrayResource,
 	#category : #'YouTrack-Resources'
 }
 
 { #category : #accessing }
-YTIssues >> issues [
+YTIssues >> items [
 	^ data collect: [ :each |
-		| issue |
-		issue := YTIssue fromData: each.
-		issue query: (self youtrack issue: (each at: 'id')).
-		issue]
+		| resource |
+		resource := YTIssue fromData: each.
+		resource query: (self youtrack issue: resource issueId).
+		resource ]
 ]

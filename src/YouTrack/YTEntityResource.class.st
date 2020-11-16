@@ -1,6 +1,6 @@
 Class {
 	#name : #YTEntityResource,
-	#superclass : #YTResource,
+	#superclass : #YTObjectResource,
 	#category : #'YouTrack-Resources'
 }
 

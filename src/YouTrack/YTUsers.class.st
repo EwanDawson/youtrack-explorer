@@ -1,5 +1,5 @@
 Class {
 	#name : #YTUsers,
-	#superclass : #YTResource,
+	#superclass : #YTArrayResource,
 	#category : #'YouTrack-Resources'
 }

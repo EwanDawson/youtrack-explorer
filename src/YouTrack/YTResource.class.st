@@ -28,6 +28,11 @@ YTResource >> data: anObject [
 	data := anObject
 ]
 
+{ #category : #accessing }
+YTResource >> query [
+	^ query
+]
+
 { #category : #private }
 YTResource >> query: aQuery [ 
 	query := aQuery
@@ -36,4 +41,9 @@ YTResource >> query: aQuery [
 { #category : #lifecycle }
 YTResource >> refresh [
 	query ifNotNil: [ self data: query execute ]
+]
+
+{ #category : #accessing }
+YTResource >> youtrack [
+	^ self query youtrack
 ]

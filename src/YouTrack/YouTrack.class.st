@@ -18,10 +18,20 @@ YouTrack class >> host: aHostString token: aTokenString [
 ]
 
 { #category : #accessing }
+YouTrack >> attachments: anIssueId [
+	^ YTQuery for: self path: 'issues/', anIssueId, '/attachments' resource: YTIssueAttachments
+]
+
+{ #category : #accessing }
 YouTrack >> clientForPath: pathSegments [
 	self resetClient.
 	client addPath: pathSegments.
 	^ client
+]
+
+{ #category : #accessing }
+YouTrack >> comments: anIssueId [
+	^ YTQuery for: self path: 'issues/', anIssueId, '/comments' resource: YTIssueComments
 ]
 
 { #category : #accessing }
@@ -33,6 +43,11 @@ YouTrack >> host: aHostString [
 YouTrack >> initialize [
 	client := ZnClient new.
 	self resetClient
+]
+
+{ #category : #accessing }
+YouTrack >> issue: anId [
+	^ YTQuery for: self path: 'issues/', anId resource: YTIssue
 ]
 
 { #category : #accessing }

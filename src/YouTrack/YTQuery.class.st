@@ -44,7 +44,7 @@ YTQuery >> prepareClient: client [
 
 { #category : #operation }
 YTQuery >> resource [
-	^ resourceClass fromData: self execute
+	^ resourceClass fromQuery: self
 ]
 
 { #category : #accessing }
@@ -62,6 +62,11 @@ YTQuery >> skip: anInteger [
 YTQuery >> top: anInteger [
 	self assert: anInteger > 0.
 	queryParams at: '$top' put: anInteger.
+]
+
+{ #category : #accessing }
+YTQuery >> youtrack [
+	^ youtrack
 ]
 
 { #category : #accessing }

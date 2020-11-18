@@ -10,7 +10,11 @@ Class {
 
 { #category : #accessing }
 YTIssue >> attachments [
-	^ attachments ifNil: [ attachments := (self youtrack attachments: self id) resource ]
+	^ attachments ifNil: [
+		| attachmentsQuery |
+		attachmentsQuery := self youtrack attachments: self id.
+		attachmentsQuery transformation: [ :attachmentData | attachmentData select: [ :attachmentDatum | (attachmentDatum at: 'issue') notNil] ].
+		attachments := attachmentsQuery resource ]
 ]
 
 { #category : #accessing }

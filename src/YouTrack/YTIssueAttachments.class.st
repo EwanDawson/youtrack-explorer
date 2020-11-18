@@ -9,6 +9,6 @@ YTIssueAttachments >> items [
 		^ data collect: [ :each |
 		| resource |
 		resource := YTIssueAttachment fromData: each.
-		resource query: (self youtrack attachment: resource issueId).
+		resource query: (self youtrack attachments: resource issueId).
 		resource ]
 ]

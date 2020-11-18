@@ -149,6 +149,11 @@ YTQuery >> fieldsString [
 	^ queryParams at: 'fields' ifAbsent: nil
 ]
 
+{ #category : #testing }
+YTQuery >> includesField: aString [
+	^ fields includes: aString
+]
+
 { #category : #initalize }
 YTQuery >> initialize [
 	queryParams := Dictionary new.

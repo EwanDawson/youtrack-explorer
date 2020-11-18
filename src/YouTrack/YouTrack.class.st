@@ -19,7 +19,10 @@ YouTrack class >> host: aHostString token: aTokenString [
 
 { #category : #accessing }
 YouTrack >> attachments: anIssueId [
-	^ YTQuery for: self path: 'issues/', anIssueId, '/attachments' resource: YTIssueAttachments
+	| query |
+	query := YTQuery for: self path: 'issues/', anIssueId, '/attachments' resource: YTIssueAttachments.
+	query mandatoryFields: { 'id'. {'issue'. {'id'} } }.
+	^ query
 ]
 
 { #category : #accessing }

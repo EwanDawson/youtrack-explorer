@@ -15,3 +15,8 @@ YTObjectResource class >> type [
 	self assert: (self name beginsWith: 'YT').
 	^ self name allButFirst: 2
 ]
+
+{ #category : #testing }
+YTObjectResource >> includesField: aString [
+	^ self query includesField: aString
+]

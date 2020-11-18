@@ -1,6 +1,6 @@
 Class {
 	#name : #YTIssueComment,
-	#superclass : #YTObjectResource,
+	#superclass : #YTEntityResource,
 	#traits : 'HasIssueId',
 	#classTraits : 'HasIssueId classTrait',
 	#instVars : [
@@ -12,4 +12,11 @@ Class {
 { #category : #accessing }
 YTIssueComment >> attachments [
 	^ attachments ifNil: [ attachments := (self youtrack commentAttachments: self issueId) resource ]
+]
+
+{ #category : #accessing }
+YTIssueComment >> refresh [
+	query ifNotNil: [
+		(self data: query execute) detect: [ :comment |
+			comment at: 'id' = self id] ]
 ]

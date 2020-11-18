@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 YTIssueAttachments >> items [
-		^ data collect: [ :each |
+	^ data collect: [ :each |
 		| resource |
 		resource := YTIssueAttachment fromData: each.
 		resource query: (self youtrack attachments: resource issueId).

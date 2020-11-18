@@ -34,7 +34,10 @@ YouTrack >> clientForPath: pathSegments [
 
 { #category : #accessing }
 YouTrack >> comments: anIssueId [
-	^ YTQuery for: self path: 'issues/', anIssueId, '/comments' resource: YTIssueComments
+	| query |
+	query := YTQuery for: self path: 'issues/', anIssueId, '/comments' resource: YTIssueComments.
+	query mandatoryFields: { 'id'. {'issue'. {'id'} } }.
+	^ query
 ]
 
 { #category : #accessing }

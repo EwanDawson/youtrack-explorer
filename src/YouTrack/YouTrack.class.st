@@ -21,7 +21,7 @@ YouTrack class >> host: aHostString token: aTokenString [
 YouTrack >> attachments: anIssueId [
 	| query |
 	query := YTQuery for: self path: 'issues/', anIssueId, '/attachments' resource: YTIssueAttachments.
-	query mandatoryFields: { 'id'. {'issue'. {'id'} } }.
+	query mandatoryFields: { 'id'. {'issue'. {'id'} }. {'comment'. {'id'} } }.
 	^ query
 ]
 

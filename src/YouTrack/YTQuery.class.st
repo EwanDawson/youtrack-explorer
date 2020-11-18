@@ -7,7 +7,8 @@ Class {
 		'youtrack',
 		'queryParams',
 		'mandatoryFields',
-		'fields'
+		'fields',
+		'transformation'
 	],
 	#category : #'YouTrack-Client'
 }
@@ -126,10 +127,13 @@ YTQuery >> addMandatoryFields [
 
 { #category : #operation }
 YTQuery >> execute [
-	| client |
+	| client data |
 	client := youtrack clientForPath: path.
 	self prepareClient: client.
-	 ^ NeoJSONReader fromString: client get
+	data := NeoJSONReader fromString: client get.
+	^ (data isArray and: [ transformation isNotNil ])
+		ifTrue: [ transformation value: data ]
+		ifFalse: data
 ]
 
 { #category : #accessing }
@@ -158,7 +162,7 @@ YTQuery >> includesField: aString [
 YTQuery >> initialize [
 	queryParams := Dictionary new.
 	fields := OrderedCollection new.
-	mandatoryFields := OrderedCollection new.
+	mandatoryFields := OrderedCollection new
 ]
 
 { #category : #accessing }
@@ -198,6 +202,11 @@ YTQuery >> skip: anInteger [
 YTQuery >> top: anInteger [
 	self assert: anInteger > 0.
 	queryParams at: '$top' put: anInteger.
+]
+
+{ #category : #accessing }
+YTQuery >> transformation: aBlock [
+	transformation := aBlock
 ]
 
 { #category : #private }

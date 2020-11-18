@@ -7,8 +7,10 @@ Class {
 { #category : #accessing }
 YTIssueComments >> items [
 	^ data collect: [ :each |
-		| resource |
+		| resource commentQuery |
 		resource := YTIssueComment fromData: each.
-		resource query: (self youtrack comments: resource issueId).
+		commentQuery := self youtrack comments: resource issueId.
+		commentQuery transformation: [ :commentData | commentData detect: [ :commentDatum | (commentDatum at: 'id') = resource id ]] .
+		resource query: commentQuery.
 		resource ]	
 ]

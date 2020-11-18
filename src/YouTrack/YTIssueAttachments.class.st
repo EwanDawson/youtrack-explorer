@@ -7,8 +7,10 @@ Class {
 { #category : #accessing }
 YTIssueAttachments >> items [
 	^ data collect: [ :each |
-		| resource |
+		| resource attachmentQuery |
 		resource := YTIssueAttachment fromData: each.
-		resource query: (self youtrack attachments: resource issueId).
+		attachmentQuery := self youtrack attachments: resource issueId.
+		attachmentQuery transformation: [ :attachmentData | attachmentData detect: [ :attachmentDatum | (attachmentDatum at: 'id') = resource id ]] .
+		resource query: attachmentQuery.
 		resource ]
 ]

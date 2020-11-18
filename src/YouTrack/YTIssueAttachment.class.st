@@ -8,10 +8,3 @@ Class {
 	#classTraits : 'HasIssueId classTrait',
 	#category : #'YouTrack-Resources'
 }
-
-{ #category : #accessing }
-YTIssueAttachment >> refresh [
-	query ifNotNil: [
-		(self data: query execute) detect: [ :attachment |
-			attachment at: 'id' = self id] ]
-]

@@ -34,6 +34,15 @@ YTResource >> data: anObject [
 ]
 
 { #category : #accessing }
+YTResource >> fields: aFieldSpec [
+	| oldFieldSpec |
+	oldFieldSpec := self query fields.
+	self query fields: aFieldSpec.
+	(self query fields flatten sort = oldFieldSpec flatten sort)
+		ifFalse: [ self refresh ]
+]
+
+{ #category : #accessing }
 YTResource >> query [
 	^ query
 ]

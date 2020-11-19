@@ -11,5 +11,21 @@ Class {
 
 { #category : #accessing }
 YTIssueComment >> attachments [
-	^ attachments ifNil: [ attachments := (self youtrack commentAttachments: self issueId) resource ]
+	^ attachments ifNil: [
+		| attachmentsQuery |
+		attachmentsQuery := self youtrack attachments: self issueId.
+		attachmentsQuery transformation: self queryTransformation.
+		attachments := attachmentsQuery resource ]
+]
+
+{ #category : #private }
+YTIssueComment >> isMyAttachment: anObject [
+	^ (anObject at: 'comment')
+		ifNotNil: [ :comment | (comment at: 'id') = self id]
+		ifNil: false
+]
+
+{ #category : #private }
+YTIssueComment >> queryTransformation [
+	^ [ :attachmentData | attachmentData select: [ :attachmentDatum | self isMyAttachment: attachmentDatum ] ]
 ]

@@ -53,7 +53,10 @@ YouTrack >> initialize [
 
 { #category : #accessing }
 YouTrack >> issue: anId [
-	^ YTQuery for: self path: 'issues/', anId resource: YTIssue
+	| query |
+	query := YTQuery for: self path: 'issues/', anId resource: YTIssue.
+	query mandatoryFields: { 'id' }.
+	^ query
 ]
 
 { #category : #accessing }

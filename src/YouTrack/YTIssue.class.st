@@ -13,7 +13,7 @@ YTIssue >> attachments [
 	^ attachments ifNil: [
 		| attachmentsQuery |
 		attachmentsQuery := self youtrack attachments: self id.
-		attachmentsQuery transformation: [ :attachmentData | attachmentData select: [ :attachmentDatum | (attachmentDatum at: 'issue') notNil] ].
+		attachmentsQuery transformation: self queryTransformation.
 		attachments := attachmentsQuery resource ]
 ]
 
@@ -27,6 +27,13 @@ YTIssue >> idReadable [
 	^ self data at: 'idReadable' ifAbsent: nil
 ]
 
+{ #category : #private }
+YTIssue >> isMyAttachment: anObject [
+	^ (anObject at: 'issue')
+		ifNotNil: [ :issue | (issue at: 'id') = self id]
+		ifNil: false
+]
+
 { #category : #printing }
 YTIssue >> printOn: aStream [
 	super printOn: aStream.
@@ -34,4 +41,9 @@ YTIssue >> printOn: aStream [
 		nextPutAll: ' (';
 		nextPutAll: ((self includesField: 'idReadable') ifTrue: [ self idReadable ] ifFalse: [ self id ]);
 		nextPut: $)
+]
+
+{ #category : #private }
+YTIssue >> queryTransformation [
+	^ [ :attachmentData | attachmentData select: [ :attachmentDatum | self isMyAttachment: attachmentDatum ] ]
 ]
